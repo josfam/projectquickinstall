@@ -59,6 +59,14 @@ echo "========== INSTALLING PROJECT DEPENDENCIES"
 sleep 2
 npm install
 
+# start mongodb
+if [[ "$os" == "darwin"* ]]; then
+	# macos
+	brew services start mongodb-community
+else
+	# linux
+	systemctl start mongod &
+fi
 
 # start the local server in a separate terminal window
 if [[ "$os" == "darwin"* ]]; then
@@ -69,14 +77,6 @@ else
 	gnome-terminal -- bash -c "npm run devstart; exec bash"
 fi
 
-# start mongodb
-if [[ "$os" == "darwin"* ]]; then
-	# macos
-	brew services start mongodb-community
-else
-	# linux
-	systemctl start mongod
-fi
 
 # wait for the server to start up
 echo "========== STARTING THE SERVER, wait for 5 seconds"
