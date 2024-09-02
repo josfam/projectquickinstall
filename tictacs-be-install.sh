@@ -10,19 +10,25 @@ git clone https://github.com/josfam/tictacs-backend && cd tictacs-backend
 if which mongod > /dev/null 2>&1; then
 	echo "========== SKIPPING MONGODB INSTALLATION. You already have it!"
 else
-	sudo apt-get install -y gnupg
-	curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
-	sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
-	--dearmor \
-	&& echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list \
-	&& sudo apt-get update \
-	&& sudo apt-get install -y mongodb-org \
-	&& echo "mongodb-org hold" | sudo dpkg --set-selections \
-	&& echo "mongodb-org-database hold" | sudo dpkg --set-selections \
-	&& echo "mongodb-org-server hold" | sudo dpkg --set-selections \
-	&& echo "mongodb-mongosh hold" | sudo dpkg --set-selections \
-	&& echo "mongodb-org-mongos hold" | sudo dpkg --set-selections \
-	&& echo "mongodb-org-tools hold" | sudo dpkg --set-selections
+	if [[ "$os" == "darwin"* ]]; then
+		echo "========== INSTALLING MONGODB VIA HOMEBREW"
+		brew tap mongodb/brew
+		brew install mongodb-community@7.0
+	else
+		sudo apt-get install -y gnupg
+		curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
+		sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
+		--dearmor \
+		&& echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list \
+		&& sudo apt-get update \
+		&& sudo apt-get install -y mongodb-org \
+		&& echo "mongodb-org hold" | sudo dpkg --set-selections \
+		&& echo "mongodb-org-database hold" | sudo dpkg --set-selections \
+		&& echo "mongodb-org-server hold" | sudo dpkg --set-selections \
+		&& echo "mongodb-mongosh hold" | sudo dpkg --set-selections \
+		&& echo "mongodb-org-mongos hold" | sudo dpkg --set-selections \
+		&& echo "mongodb-org-tools hold" | sudo dpkg --set-selections
+	fi
 fi
 
 # install node if it does not exist
@@ -61,6 +67,15 @@ if [[ "$os" == "darwin"* ]]; then
 else
 	# linux
 	gnome-terminal -- bash -c "npm run devstart; exec bash"
+fi
+
+# start mongodb
+if [[ "$os" == "darwin"* ]]; then
+	# macos
+	brew services start mongodb-community
+else
+	# linux
+	systemctl start mongod
 fi
 
 # wait for the server to start up
