@@ -35,4 +35,12 @@ fi
 
 # start the frontend server
 cd front_end
-npm run dev
+
+# start the backend servers in a seperate terminal depending on the os
+if [[ "$os" == "darwin" ]]; then
+	# macos
+	open -a Terminal "npm run dev"
+else
+	# linux
+	gnome-terminal -- bash -c "npm run dev"
+fi
