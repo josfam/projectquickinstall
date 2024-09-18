@@ -5,6 +5,13 @@ os="$OSTYPE"
 echo $os
 
 git clone https://github.com/josfam/sunema && cd sunema
+
+# create a .env file for storing envirionment variables
+touch .env
+content = "TMDB_API_KEY=\"\"\n
+OPENWEATHER_MAP_API_KEY=\"\"\n"
+echo "$content" > .env
+
 cd front_end
 
 # install node if it does not exist, and install front end dependencies
