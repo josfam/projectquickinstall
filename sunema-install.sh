@@ -18,12 +18,11 @@ fi
 npm install
 
 # install backend dependencies
-cd ../back_end
+cd ..
 
 python3 -m venv venv-sunema
 source venv-sunema/bin/activate
 pip install -r requirements.txt
-cd ..
 
 # start the backend servers in a seperate terminal depending on the os
 if [[ "$os" == "darwin" ]]; then
