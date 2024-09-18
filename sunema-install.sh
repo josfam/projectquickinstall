@@ -51,3 +51,13 @@ else
 	# linux
 	gnome-terminal -- bash -c "npm run dev"
 fi
+
+# open the default browser in the vite host
+# It is assumed that the default vite port (5173) will be used
+if [[ "$os" == "darwin" ]]; then
+	# macos
+	open http://localhost:5173/
+else
+	# linux
+	xdg-open http://localhost:5173/
+fi
